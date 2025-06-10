@@ -1,0 +1,37 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '14.0'  # الحد الأدنى المطلوب لـ google_maps_flutter_ios
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_installation
+  # Path to the Flutter installation directory.
+  generated_xcode_build_settings = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  raise "#{generated_xcode_build_settings} must exist. If you're running pod install manually, make sure flutter pub get is executed first." unless File.exist?(generated_xcode_build_settings)
+
+  File.foreach(generated_xcode_build_settings) do |line|
+    matches = line.match(/FLUTTER_ROOT=(.*)/)
+    if matches
+      flutter_root = matches[1].strip
+      require File.expand_path(File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper.rb'))
+      return
+    end
+  end
+
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings}. Try running flutter pub get."
+end
+
+flutter_installation
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+end
